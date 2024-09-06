@@ -2,8 +2,10 @@
 
 namespace App\infrastructure\Http\Controllers\Auth;
 
-use App\application\Services\UserService;
+use App\application\services\UserService;
 use App\infrastructure\Http\Controllers\Controller;
+use App\infrastructure\Http\enums\HttpCodes;
+use App\infrastructure\Http\exceptions\BadRequestException;
 use App\infrastructure\Http\validators\Auth\RegisterUserValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -19,12 +21,22 @@ class AuthController extends Controller
     {
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse|int
+     */
     public function register(Request $request)
     {
-        Log::info('Holiwis');
-        Log::info('Register user starting.', ["RegisterUserAction"], $request);
-        $registerUserCommand = $this->registerUserValidator->validate($request);
-//        $this->userService->saveUser($request->body);
-        return response()->json([$request->ip() => ["Holanda" => $request->all()]]);
+        try{
+
+            Log::info('Register user starting ->', ["RegisterUserAction", $request->getMethod(), $request->all()]);
+            $registerUserCommand = $this->registerUserValidator->validate($request);
+            $this->userService->saveUser($registerUserCommand);
+
+            return response()->json([$request->ip() => ["Holanda" => $request->all()]])->setStatusCode(HttpCodes::CREATED);
+        }catch (BadRequestException $exception){
+            Log::error('Register user has failed ->', ["RegisterUserAction", $exception->getMessages()]);
+            return response()->json($exception->getMessages())->setStatusCode($exception->getCode());
+        }
     }
 }

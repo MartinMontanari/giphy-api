@@ -15,7 +15,8 @@ readonly class RegisterUserCommand
     {
     }
 
-    public function getData(): array{
+    public function getData(): array
+    {
         return [
             'userName' => $this->userName,
             'firstName' => $this->firstname,
