@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\infrastructure\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,8 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('login', 'AuthController@login');
-Route::post('register', 'AuthController@register');
+Route::post('register', [AuthController::class, 'register']);
 Route::middleware('auth:api')->group(function () {
 //    Route::get('user', 'AuthController@user');
 //    // Other authenticated routes...

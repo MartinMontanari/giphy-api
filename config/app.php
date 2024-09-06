@@ -163,11 +163,11 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
+        \App\infrastructure\Providers\AppServiceProvider::class,
+        \App\infrastructure\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        \App\infrastructure\Providers\EventServiceProvider::class,
+        \App\infrastructure\Providers\RouteServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
     ])->toArray(),
 
@@ -186,4 +186,11 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+
+    'services' => [
+        'giphy' => [
+            'baseUrl' => env('GIPHY_BASE_URL'),
+            'apiKey' => env('GIPHY_API_KEY'),
+        ]
+    ],
 ];
