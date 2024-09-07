@@ -34,7 +34,8 @@ class AuthController extends Controller
             $registerUserCommand = $this->registerUserValidator->validate($request);
             $this->userService->saveUser($registerUserCommand);
 
-            return response()->json([$request->ip() => ["Holanda" => $request->all()]])->setStatusCode(HttpCodes::CREATED);
+            Log::info('Done, User registered Ok! ->', ["RegisterUserAction", $request->getMethod()]);
+            return response()->json([$request->ip() => ["message" => "User registered ok."]])->setStatusCode(HttpCodes::CREATED);
         }
         catch (BadRequestException $exception){
             Log::error('Register user has failed ->', ["RegisterUserAction", $exception->getMessages()]);
