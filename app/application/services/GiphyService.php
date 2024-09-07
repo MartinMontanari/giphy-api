@@ -4,12 +4,10 @@ namespace App\application\services;
 
 use Illuminate\Support\Facades\Http;
 
-class GiphyService
+readonly class GiphyService
 {
-//    private string $giphyBaseUrl = config('app.services.giphy.baseUrl', );
-//    protected string $apiKey =
-    protected $baseUrl = "asdasd";
-    protected $apiKey = "asdasd";
+//    protected string $baseUrl = "asdasd";
+//    protected string  $apiKey = "asdasd";
 
     public function searchGifs($query, $limit = 10, $offset = 0)
     {

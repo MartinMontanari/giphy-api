@@ -5,7 +5,7 @@ namespace App\infrastructure\repositories;
 use App\domain\Models\User;
 use Illuminate\Support\Facades\Log;
 
-class UserRepository
+readonly class UserRepository
 {
 
     /**
