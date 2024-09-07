@@ -3,9 +3,10 @@
 namespace App\infrastructure\Http\Controllers\Auth;
 
 use App\application\services\UserService;
+use App\infrastructure\Exceptions\BadRequestException;
+use App\infrastructure\Exceptions\RepositoryException;
 use App\infrastructure\Http\Controllers\Controller;
 use App\infrastructure\Http\enums\HttpCodes;
-use App\infrastructure\Http\exceptions\BadRequestException;
 use App\infrastructure\Http\validators\Auth\RegisterUserValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -34,7 +35,12 @@ class AuthController extends Controller
             $this->userService->saveUser($registerUserCommand);
 
             return response()->json([$request->ip() => ["Holanda" => $request->all()]])->setStatusCode(HttpCodes::CREATED);
-        }catch (BadRequestException $exception){
+        }
+        catch (BadRequestException $exception){
+            Log::error('Register user has failed ->', ["RegisterUserAction", $exception->getMessages()]);
+            return response()->json($exception->getMessages())->setStatusCode($exception->getCode());
+        }
+        catch (RepositoryException $exception){
             Log::error('Register user has failed ->', ["RegisterUserAction", $exception->getMessages()]);
             return response()->json($exception->getMessages())->setStatusCode($exception->getCode());
         }

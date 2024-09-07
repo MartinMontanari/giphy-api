@@ -1,17 +1,17 @@
 <?php
 
-namespace App\infrastructure\Http\exceptions;
+namespace App\infrastructure\Exceptions;
 
 use App\infrastructure\Http\enums\HttpCodes;
 use Exception;
 
-class BadRequestException extends Exception
+class RepositoryException extends Exception
 {
     private array $messages;
 
     public function __construct(
         array $message,
-        $code = HttpCodes::BAD_REQUEST)
+        null|int $code = HttpCodes::UNPROCESSABLE_ENTITY)
     {
         $this->messages = $message;
         $this->code = $code;

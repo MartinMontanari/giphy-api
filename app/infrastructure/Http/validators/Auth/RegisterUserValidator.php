@@ -3,7 +3,7 @@
 namespace App\infrastructure\Http\validators\Auth;
 
 use App\application\commands\Auth\RegisterUserCommand;
-use App\infrastructure\Http\exceptions\BadRequestException;
+use App\infrastructure\Exceptions\BadRequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
