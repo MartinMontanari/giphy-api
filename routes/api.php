@@ -1,6 +1,7 @@
 <?php
 
 use App\infrastructure\Http\Controllers\Auth\AuthController;
+use App\infrastructure\Http\Controllers\gifs\GetGifsBySpecificationAction;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,7 +18,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('register', [AuthController::class, 'register']);
+//Route::post('register', [AuthController::class, 'register']);
+Route::get('gifs/search', [GetGifsBySpecificationAction::class, 'execute']);
+Route::get('logs', [\App\infrastructure\Http\Controllers\LogController::class, 'showLogs']);
 Route::middleware('auth:api')->group(function () {
 //    Route::get('user', 'AuthController@user');
 //    // Other authenticated routes...

@@ -3,30 +3,32 @@
 namespace App\infrastructure\Http\validators\Auth;
 
 use App\application\commands\Auth\RegisterUserCommand;
+use App\infrastructure\Exceptions\BadRequestException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class RegisterUserValidator
 {
 
 
+    /**
+     * @param Request $request
+     * @return RegisterUserCommand
+     * @throws BadRequestException
+     */
     public function validate(Request $request): RegisterUserCommand
     {
-
         $validate = Validator::make($request->all(), $this->getRules(), $this->getMessages());
 
         if($validate->fails()){
             throw new BadRequestException($validate->errors()->getMessages());
         }
-        Log::info($validate);
         return new RegisterUserCommand(
-            $validate->userName,
-            $validate->firstName,
-            $validate->lastName,
-            $validate->email,
-            $validate->password,
+            $request->input('userName'),
+            $request->input('firstName'),
+            $request->input('lastName'),
+            $request->input('email'),
+            $request->input('password'),
         );
     }
 
