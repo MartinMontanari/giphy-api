@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InteractionHistory extends Model
 {
-    protected $table = 'service_interactions';
+    protected $table = 'interaction_history';
 
     protected $fillable = [
         'user_id',

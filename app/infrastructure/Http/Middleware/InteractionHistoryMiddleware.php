@@ -2,11 +2,11 @@
 
 namespace App\infrastructure\Http\Middleware;
 
+
 use App\infrastructure\services\InteractionHistoryService;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\domain\Models\InteractionHistory;
 
 readonly class InteractionHistoryMiddleware
 {
@@ -17,6 +17,11 @@ readonly class InteractionHistoryMiddleware
     {
     }
 
+    /**
+     * @param Request $request
+     * @param Closure $next
+     * @return mixed
+     */
     public function handle(Request $request, Closure $next)
     {
         $response = $next($request);

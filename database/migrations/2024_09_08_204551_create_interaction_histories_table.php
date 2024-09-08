@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('service');
             $table->json('request_body');
             $table->integer('response_code');
-            $table->text('response_body');
+            $table->longText('response_body');
             $table->string('ip_address');
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('interaction_histories');
+        Schema::dropIfExists('interaction_history');
     }
 };

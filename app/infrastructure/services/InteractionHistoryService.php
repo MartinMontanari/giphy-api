@@ -25,6 +25,7 @@ readonly class InteractionHistoryService
         $interaction->service = $interactionData['service'];
         $interaction->request_body = $interactionData['request_body'];
         $interaction->response_code = $interactionData['response_code'];
+        $interaction->response_body = $interactionData['response_body'];
         $interaction->ip_address = $interactionData['ip_address'];
 
         $this->interactionHistoryRepository->save($interaction);
