@@ -2,25 +2,25 @@
 
 namespace App\infrastructure\Http\Controllers\gifs;
 
-use App\application\queries\Gifs\GetGifsBySpecificationQuery;
+use App\application\queries\Gifs\GetIfByIdQuery;
+use App\application\queryHandlers\Gifs\GetGifByIdHandler;
 use App\application\queryHandlers\Gifs\GetGifsBySpecificationHandler;
 use App\infrastructure\Exceptions\BadRequestException;
-use App\infrastructure\Exceptions\RepositoryException;
 use App\infrastructure\Exceptions\ServiceException;
 use App\infrastructure\Http\Controllers\Controller;
 use App\infrastructure\Http\enums\HttpCodes;
+use App\infrastructure\Http\validators\Gifs\GetGifByIdValidator;
 use App\infrastructure\Http\validators\Gifs\GetGifsBySpecificationValidator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use Mockery\Exception;
 
-class GetGifsBySpecificationAction extends Controller
+class GetGifByIdAction extends Controller
 {
     public function __construct(
-        private readonly GetGifsBySpecificationHandler $getBySpecificationHandler,
-        private readonly GetGifsBySpecificationValidator $getGifsBySpecificationValidator
+        private readonly GetGifByIdHandler $getGifByIdHandler,
+        private readonly GetGifByIdValidator $getGifByIdValidator
     )
     {
     }
@@ -32,17 +32,16 @@ class GetGifsBySpecificationAction extends Controller
     public function execute(Request $request): JsonResponse
     {
         try {
-            Log::info('Search gifs by SPECIFICATION use case starting ->', ["GetGifsBySpecificationAction", $request->getMethod(), $request->all()]);
-
-            /** @var GetGifsBySpecificationQuery $getGifsBySpecificationQuery */
-            $getGifsBySpecificationQuery = $this->getGifsBySpecificationValidator->validate($request);
+            Log::info('Search gifs by ID use case starting ->', ["GetGifByIdAction", $request->getMethod(), $request->all()]);
+            /** @var GetIfByIdQuery $getGifByIdQuery */
+            $getGifByIdQuery = $this->getGifByIdValidator->validate($request);
 
             /** @var Collection $searchResult */
-            $searchResult = $this->getBySpecificationHandler->handle($getGifsBySpecificationQuery);
+            $searchResult = $this->getGifByIdHandler->handle($getGifByIdQuery);
 
             return response()->json($searchResult)->setStatusCode(HttpCodes::OK);
         } catch (BadRequestException $exception) {
-            Log::error('Search gifs by specification has failed ->', ["GetGifsBySpecificationAction", $exception->getMessages()]);
+            Log::error('Search gif by id has failed ->', ["GetGifsBySpecificationAction", $exception->getMessages()]);
 
             return response()->json($exception->getMessages())->setStatusCode($exception->getCode());
         } catch (ServiceException $exception) {
@@ -51,7 +50,7 @@ class GetGifsBySpecificationAction extends Controller
             return response()->json($exception->getMessages())->setStatusCode($exception->getCode());
         }
         catch (\Exception $exception) {
-            Log::error('Something is wrong with the specification query.', ["GetGifsBySpecificationAction", $exception->getMessage()]);
+            Log::error('Search gifs by specification has failed.', ["GetGifsBySpecificationAction", $exception->getMessage()]);
 
             return response()->json($exception->getMessage())->setStatusCode($exception->getCode());
         }

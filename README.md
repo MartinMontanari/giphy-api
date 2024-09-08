@@ -37,7 +37,8 @@ project-root/
 ├── composer.json
 └── phpunit.xml
 ```
-
+# cambié el id del gif de numerico a string porque en la respuesta el id obtenido no es numérico
+![gif-id-is-string-not-number-img.png](gif-id-is-string-not-number-img.png)
 --------------------------------------
 ## How to download and install the project
 

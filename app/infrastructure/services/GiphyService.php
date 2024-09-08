@@ -5,12 +5,12 @@ namespace App\infrastructure\services;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 readonly class GiphyService
 {
     const GIPHY_SEARCH_PATH = "/search";
+    const GIPHY_GET_BY_ID_PATH = "/";
     protected string $giphyBaseUrl;
     protected string $giphySecretKey;
 
@@ -32,7 +32,7 @@ readonly class GiphyService
      */
     public function searchGifs(string $query, int $limit, int $offset): Collection
     {
-        Log::info("Searching gifs by -> $query", ["GiphyService", "searchGifs()" ,"- START -"]);
+        Log::info("Searching gifs by -> $query", ["GiphyService", "searchGifs()", "- START -"]);
         $giphySearchResult = $this->client->get($this->giphyBaseUrl . self::GIPHY_SEARCH_PATH, [
             'query' => [
                 'api_key' => $this->giphySecretKey,
@@ -43,17 +43,27 @@ readonly class GiphyService
         ]);
 
         $decodedSearchGiphyResultCollection = new Collection(json_decode($giphySearchResult->getBody(), true));
-        Log::info("Search resulted ok.", ["GiphyService", "searchGifs()", "- END -"]);
+        Log::info("Search done.", ["GiphyService", "searchGifs()", "- END -"]);
 
         return $decodedSearchGiphyResultCollection;
     }
 
-
-
-    public function getGifById(string $id)
+    /**
+     * @param string $id
+     * @return Collection
+     * @throws GuzzleException
+     */
+    public function getGifById(string $id): Collection
     {
-        return Http::get($this->giphyBaseUrl . $id, [
-            'api_key' => $this->giphySecretKey,
-        ])->json();
+        Log::info("Searching gif for id -> $id", ["GiphyService", "getGifById($id)", "- START -"]);
+        $giphySearchResult = $this->client->get($this->giphyBaseUrl . self::GIPHY_GET_BY_ID_PATH . $id, [
+            'query' => [
+                'api_key' => $this->giphySecretKey,
+            ]
+        ]);
+        $decodedSearchGiphyResultCollection = new Collection(json_decode($giphySearchResult->getBody()->getContents(), true));
+        Log::info("Gif for -> $id found.", ["GiphyService", "getGifById($id)", "- END -"]);
+
+        return $decodedSearchGiphyResultCollection;
     }
 }
