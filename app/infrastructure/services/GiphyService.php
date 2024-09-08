@@ -48,6 +48,8 @@ readonly class GiphyService
         return $decodedSearchGiphyResultCollection;
     }
 
+
+
     public function getGifById(string $id)
     {
         return Http::get($this->giphyBaseUrl . $id, [

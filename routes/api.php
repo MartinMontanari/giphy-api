@@ -14,12 +14,12 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::get('/', function () {
-    return view('welcome');
+
+Route::middleware('log.interactions')->group(function () {
+    Route::get('gifs/search', [GetGifsBySpecificationAction::class, 'execute']);
 });
 
 //Route::post('register', [AuthController::class, 'register']);
-Route::get('gifs/search', [GetGifsBySpecificationAction::class, 'execute']);
 Route::get('logs', [\App\infrastructure\Http\Controllers\LogController::class, 'showLogs']);
 Route::middleware('auth:api')->group(function () {
 //    Route::get('user', 'AuthController@user');
