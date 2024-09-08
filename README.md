@@ -68,10 +68,13 @@ Open a new terminal (linux/macOS) or a GitBash or PowerShell (Windows) and clone
 
 - That's should run Sail's migrations.
 
-5 - Once there are done, you should execute ➜  `./vendor/bin/sail artisan key:generate`.
+5 - Execute the artisan command to generate the base64 apikey ➜  `./vendor/bin/sail artisan key:generate`.
 
-6 -
+6 - Execute the artisan command to install passport and generate the secrets ➜  `./vendor/bin/sail artisan passport:install`.
 
+- If the prompt ask you about the passport pending migrations, you should type `yes` and confirm.
+- As result passport will create a new secret keys.
+ 
 7 - Now you could test the health check opening a web browser and going to the URL `http://localhost/` and the API should return
 ```
 // 20240905200940

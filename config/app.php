@@ -189,8 +189,8 @@ return [
 
     'services' => [
         'giphy' => [
-            'baseUrl' => env('GIPHY_BASE_URL'),
-            'apiKey' => env('GIPHY_API_KEY'),
+            'baseUrl' => env('GIPHY_API_BASE_URL'),
+            'apiKey' => env('GIPHY_API_SECRET_KEY'),
         ]
     ],
 ];
