@@ -13,6 +13,7 @@ use App\infrastructure\Http\validators\Gifs\GetGifsBySpecificationValidator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Mockery\Exception;
 
 class GetGifsBySpecificationAction extends Controller
 {
@@ -35,7 +36,7 @@ class GetGifsBySpecificationAction extends Controller
             $getGifsBySpecificationQuery = $this->getGifsBySpecificationValidator->validate($request);
             $searchResult = $this->getBySpecificationHandler->handle($getGifsBySpecificationQuery);
 
-            return response()->json($searchResult)->setStatusCode(HttpCodes::CREATED);
+            return response()->json($searchResult)->setStatusCode(HttpCodes::OK);
         } catch (BadRequestException $exception) {
             Log::error('Search gifs by specification has failed ->', ["GetGifsBySpecificationAction", $exception->getMessages()]);
 
@@ -45,11 +46,10 @@ class GetGifsBySpecificationAction extends Controller
 
             return response()->json($exception->getMessages())->setStatusCode($exception->getCode());
         }
-//        catch (RepositoryException $exception) {
-//            Log::error('Something is wrong with the specification query.', ["GetGifsBySpecificationAction", $exception->getMessages()]);
-//            $response = new CustomResponse('Register user has failed', $exception->getMessages());
-//
-//            return response()->json($response->getResponseWithError())->setStatusCode($exception->getCode());
-//        }
+        catch (\Exception $exception) {
+            Log::error('Something is wrong with the specification query.', ["GetGifsBySpecificationAction", $exception->getMessages()]);
+
+            return response()->json($exception->getMessage())->setStatusCode($exception->getCode());
+        }
     }
 }
