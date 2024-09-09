@@ -31,23 +31,23 @@ namespace App\infrastructure\Http\Controllers\Auth;
 //    public function register(Request $request): JsonResponse
 //    {
 //        try {
-//            Log::info('Register user starting ->', ["RegisterUserAction", $request->getMethod(), $request->all()]);
+//            Log::info('Register user starting ->', ["OauthLoginAction", $request->getMethod(), $request->all()]);
 //
 //            $registerUserCommand = $this->registerUserValidator->validate($request);
 //
 //            $this->userService->saveUser($registerUserCommand);
 //
-//            Log::info('Done, User registered Ok! ->', ["RegisterUserAction", $request->getMethod()]);
+//            Log::info('Done, User registered Ok! ->', ["OauthLoginAction", $request->getMethod()]);
 //            $response = new CustomResponse("User registered ok.", []);
 //
 //            return response()->json($response->getResponseWithSuccess())->setStatusCode(HttpCodes::CREATED);
 //        } catch (BadRequestException $exception) {
-//            Log::error('Register user has failed ->', ["RegisterUserAction", $exception->getMessages()]);
+//            Log::error('Register user has failed ->', ["OauthLoginAction", $exception->getMessages()]);
 //            $response = new CustomResponse('Register user has failed', $exception->getMessages());
 //
 //            return response()->json($response->getResponseWithError())->setStatusCode($exception->getCode());
 //        } catch (RepositoryException $exception) {
-//            Log::error('Register user has failed ->', ["RegisterUserAction", $exception->getMessages()]);
+//            Log::error('Register user has failed ->', ["OauthLoginAction", $exception->getMessages()]);
 //            $response = new CustomResponse('Register user has failed', $exception->getMessages());
 //
 //            return response()->json($response->getResponseWithError())->setStatusCode($exception->getCode());
@@ -65,7 +65,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class AuthController extends Controller
+class RegisterOauthClientAction extends Controller
 {
     public function __construct(
         private readonly RegisterUserHandler $registerUserHandler,
@@ -78,55 +78,30 @@ class AuthController extends Controller
      * @param Request $request
      * @return JsonResponse
      */
-    public function register(Request $request): JsonResponse
+    public function execute(Request $request): JsonResponse
     {
         try {
-            Log::info('Register user starting ->', ["RegisterUserAction", $request->getMethod(), $request->all()]);
+            Log::info('Register user starting ->', ["OauthLoginAction", $request->getMethod(), $request->all()]);
 
             $registerUserCommand = $this->registerUserValidator->validate($request);
             $this->registerUserHandler->handle($registerUserCommand);
 
-            Log::info('Done, User registered Ok! ->', ["RegisterUserAction", $request->getMethod()]);
+            Log::info('Done, User registered Ok! ->', ["OauthLoginAction", $request->getMethod()]);
             return response()->json()->setStatusCode(HttpCodes::CREATED);
         } catch (BadRequestException $exception) {
-            Log::error('Register user has failed ->', ["RegisterUserAction", $exception->getMessages()]);
+            Log::error('Register user has failed ->', ["OauthLoginAction", $exception->getMessages()]);
 
             return response()->json(["error" => $exception->getMessages()])->setStatusCode($exception->getCode());
         } catch (RepositoryException $exception) {
-            Log::error('Register user has failed ->', ["RegisterUserAction", $exception->getMessages()]);
+            Log::error('Register user has failed ->', ["OauthLoginAction", $exception->getMessages()]);
 
             return response()->json(["error" => $exception->getMessages()])->setStatusCode($exception->getCode());
         } catch (\Exception $exception) {
-            Log::error('Register user has failed ->', ["RegisterUserAction", $exception->getMessage()]);
+            Log::error('Register user has failed ->', ["OauthLoginAction", $exception->getMessage()]);
 
             return response()->json(["error" => $exception->getMessage()])->setStatusCode(HttpCodes::INTERNAL_ERROR);
         }
     }
 
-    /**
-     * @param Request $request
-     * @return array|JsonResponse|mixed
-     */
-    public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
 
-        $response = \Http::post(config('passport.oauth.urls.redirect'), [
-            'grant_type' => 'password',
-            'client_id' => config('passport.password_grant_client.id'),
-            'client_secret' => config('passport.password_grant_client.secret'),
-            'username' => $request->email,
-            'password' => $request->password,
-            'scope' => '',
-        ]);
-
-        if ($response->failed()) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-
-        return $response->json();
-    }
 }
