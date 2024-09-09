@@ -4,10 +4,10 @@ namespace App\application\commandHandlers\favorites;
 
 use App\application\commands\favorites\NewFavoriteGifCommand;
 use App\domain\Models\Favorite;
-use App\domain\services\UserService;
 use App\infrastructure\Exceptions\NotFoundException;
 use App\infrastructure\repositories\FavoriteRepository;
 use App\infrastructure\services\GiphyService;
+use App\infrastructure\services\UserService;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;

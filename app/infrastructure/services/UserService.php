@@ -1,14 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Infrastructure\services;
+namespace App\infrastructure\services;
 
 use App\domain\Models\User;
 use App\infrastructure\Exceptions\NotFoundException;
 use App\infrastructure\repositories\UserRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
-use phpseclib3\Math\BigInteger;
 
 readonly class UserService
 {
@@ -55,21 +54,21 @@ readonly class UserService
 //    }
 
     /**
-     * @param BigInteger $id
+     * @param int $id
      * @return void
      * @throws NotFoundException
      */
-    public function checkIfUserExists(BigInteger $id): void
+    public function checkIfUserExists(int $id): void
     {
         $this->findOneById($id);
     }
 
     /**
-     * @param BigInteger $id
+     * @param int $id
      * @return void
      * @throws NotFoundException
      */
-    private function findOneById(BigInteger $id): void
+    private function findOneById(int $id): void
     {
         try {
             Log::info("Find a user in the database starting... id -> $id", ["UserService", "findOneById($id)", "- START -",]);

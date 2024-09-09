@@ -21,11 +21,11 @@ readonly class NewFavoriteGifValidator
         if ($validate->fails()) {
             throw new BadRequestException($validate->errors()->getMessages());
         }
+
         return new NewFavoriteGifCommand(
             $request->input('gif_id'),
             $request->input('alias'),
             $request->input('user_id'),
-
         );
     }
 

@@ -6,7 +6,6 @@ use App\domain\Models\User;
 use App\infrastructure\Exceptions\NotFoundException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
-use phpseclib3\Math\BigInteger;
 
 readonly class UserRepository
 {
@@ -22,10 +21,10 @@ readonly class UserRepository
     }
 
     /**
-     * @param BigInteger $id
+     * @param int $id
      * @return User
      */
-    public function findOneById(BigInteger $id): User
+    public function findOneById(int $id): User
     {
         Log::info("Getting the user in the database... id = $id", ["UserRepository", "- START -"]);
         $user = new User();
