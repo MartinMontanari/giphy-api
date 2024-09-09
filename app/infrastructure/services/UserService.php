@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\domain\services;
 
-use App\application\commands\Auth\LoginUserCommand;
 use App\domain\Models\User;
 use App\infrastructure\Exceptions\NotFoundException;
 use App\infrastructure\repositories\UserRepository;
@@ -67,17 +66,17 @@ readonly class UserService
 
     /**
      * @param BigInteger $id
-     * @return User
+     * @return void
      * @throws NotFoundException
      */
-    private function findOneById(BigInteger $id): User
+    private function findOneById(BigInteger $id): void
     {
         try {
             Log::info("Find a user in the database starting... id -> $id", ["UserService", "findOneById($id)", "- START -",]);
             $user = $this->userRepository->findOneById($id);
 
             Log::info("user found... user -> $user->first_name $user->last_name | $user->email", ["UserService", "findOneById($id)", "- END -",]);
-            return $user;
+            return;
         } catch (ModelNotFoundException $exception) {
             Log::error("User not found on database, id -> $id", ["UserRepository", "findOneById($id)", "Error" => $exception->getMessage()]);
             throw new NotFoundException([$exception->getMessage()]);
