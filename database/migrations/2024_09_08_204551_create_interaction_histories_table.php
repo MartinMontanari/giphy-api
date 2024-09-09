@@ -12,7 +12,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('interaction_history', function (Blueprint $table) {
-            $table->id();
+            $table->unsignedBigInteger();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->string('service');
             $table->json('request_body');
