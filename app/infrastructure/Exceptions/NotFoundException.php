@@ -5,13 +5,13 @@ namespace App\infrastructure\Exceptions;
 use App\infrastructure\Http\enums\HttpCodes;
 use Exception;
 
-class ServiceException extends Exception
+class NotFoundException extends Exception
 {
     private array $messages;
 
     public function __construct(
         array $message,
-        null|int $code = HttpCodes::INTERNAL_ERROR)
+        null|int $code = HttpCodes::NOT_FOUND)
     {
         $this->messages = $message;
         $this->code = $code;
