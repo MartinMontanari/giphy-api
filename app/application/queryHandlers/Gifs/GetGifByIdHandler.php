@@ -2,8 +2,8 @@
 
 namespace App\application\queryHandlers\Gifs;
 
-use App\application\queries\Gifs\GetGifsBySpecificationQuery;
 use App\application\queries\Gifs\GetIfByIdQuery;
+use App\infrastructure\Exceptions\NotFoundException;
 use App\infrastructure\Exceptions\ServiceException;
 use App\infrastructure\services\GiphyService;
 use GuzzleHttp\Exception\GuzzleException;
@@ -21,22 +21,18 @@ readonly class GetGifByIdHandler
     }
 
     /**
-     * @param  GetIfByIdQuery $query
+     * @param GetIfByIdQuery $query
      * @return Collection
-     * @throws ServiceException
+     * @throws GuzzleException
+     * @throws NotFoundException
      */
-    public function handle(GetIfByIdQuery $query): Collection
+     public function handle(GetIfByIdQuery $query): Collection
     {
-        try {
-            Log::info('Processing GetIfByIdQuery', ["GetGifByIdHandler", "- START -", $query->getData()]);
-            (string)$gifId = $query->getData()['id'];
+        Log::info('Processing GetIfByIdQuery', ["GetGifByIdHandler", "- START -", $query->getData()]);
+        (string)$gifId = $query->getData()['id'];
 
-            $response = $this->gifService->getGifById($gifId);
-            Log::info('GetIfByIdQuery processed ok.', ["GetGifByIdHandler", "- DONE -", $query->getData()]);
-            return $response;
-        }
-        catch (GuzzleException $exception) {
-            throw new ServiceException([$exception->getMessage()]);
-        }
+        $response = $this->gifService->getGifById($gifId);
+        Log::info('GetIfByIdQuery processed ok.', ["GetGifByIdHandler", "- DONE -", $query->getData()]);
+        return $response;
     }
 }

@@ -13,7 +13,6 @@ readonly class GetGifsBySpecificationHandler
 {
 
     public function __construct(
-//        private GifRepository $gifRepository,
         private GiphyService $gifService
     )
     {
@@ -22,11 +21,10 @@ readonly class GetGifsBySpecificationHandler
     /**
      * @param GetGifsBySpecificationQuery $query
      * @return Collection
-     * @throws ServiceException
+     * @throws GuzzleException
      */
     public function handle(GetGifsBySpecificationQuery $query): Collection
     {
-        try {
             Log::info('Processing GetGifsBySpecificationQuery', ["GetGifsBySpecificationHandler", "- START -", $query->getData()]);
             (string)$queryPhrase = $query->getData()['query'];
             (int)$limit = $query->getData()['limit'] ?? 10;
@@ -37,9 +35,6 @@ readonly class GetGifsBySpecificationHandler
             $response = $this->gifService->searchGifs($queryPhrase, $limit, $offset);
             Log::info('GetGifsBySpecificationQuery processed ok.', ["GetGifsBySpecificationHandler", "- END -", $query->getData()]);
             return $response;
-        }
-        catch (GuzzleException $exception) {
-            throw new ServiceException([$exception->getMessage()]);
-        }
+
     }
 }

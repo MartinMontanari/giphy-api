@@ -1,8 +1,8 @@
 <?php
 
 use App\infrastructure\Http\Controllers\Auth\AuthController;
-use App\infrastructure\Http\Controllers\gifs\GetGifByIdAction;
-use App\infrastructure\Http\Controllers\gifs\GetGifsBySpecificationAction;
+use App\infrastructure\Http\Controllers\Gifs\GetGifByIdAction;
+use App\infrastructure\Http\Controllers\Gifs\GetGifsBySpecificationAction;
 use App\infrastructure\Http\Controllers\Health\HealthCheckAction;
 use Illuminate\Support\Facades\Route;
 
