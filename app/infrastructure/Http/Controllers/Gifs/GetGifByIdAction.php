@@ -43,15 +43,15 @@ class GetGifByIdAction extends Controller
         } catch (BadRequestException $exception) {
             Log::error('Search gif by id has failed ->', ["GetGifsBySpecificationAction", $exception->getMessages()]);
 
-            return response()->json($exception->getMessages())->setStatusCode($exception->getCode());
+            return response()->json(["error" => $exception->getMessages()])->setStatusCode($exception->getCode());
         } catch (NotFoundException $exception) {
             Log::error('Search gif by id has failed ->', ["GetGifsBySpecificationAction", $exception->getMessages()]);
 
-            return response()->json($exception->getMessages())->setStatusCode($exception->getCode());
+            return response()->json(["error" => $exception->getMessages()])->setStatusCode($exception->getCode());
         } catch (\Exception $exception) {
             Log::error('Search gifs by specification has failed.', ["GetGifsBySpecificationAction", $exception->getMessage()]);
 
-            return response()->json($exception->getMessage())->setStatusCode($exception->getCode());
+            return response()->json(["error" => $exception->getMessage()])->setStatusCode(HttpCodes::INTERNAL_ERROR);
         }
     }
 }
