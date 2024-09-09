@@ -6,6 +6,7 @@ use App\application\commands\favorites\NewFavoriteGifCommand;
 use App\domain\Models\Favorite;
 use App\domain\services\UserService;
 use App\infrastructure\Exceptions\NotFoundException;
+use App\infrastructure\repositories\FavoriteRepository;
 use App\infrastructure\services\GiphyService;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Collection;
@@ -17,17 +18,18 @@ readonly class NewFavoriteGifHandler
     public function __construct(
         private UserService $userService,
         private GiphyService $gifService,
+        private FavoriteRepository $favoriteRepository
     )
     {
     }
 
     /**
      * @param NewFavoriteGifCommand $command
-     * @return Collection
-     * @throws NotFoundException
+     * @return void
      * @throws GuzzleException
+     * @throws NotFoundException
      */
-    public function handle(NewFavoriteGifCommand $command): Collection
+    public function handle(NewFavoriteGifCommand $command): void
     {
         Log::info('Processing NewFavoriteGifCommand', ["NewFavoriteGifHandler", "- START -", $command->getData()]);
         $userId = $command->getData()['user_id'];
@@ -38,7 +40,11 @@ readonly class NewFavoriteGifHandler
         $this->gifService->checkIfGifExists($gifId);
 
         $favorite = new Favorite();
+        $favorite->user_id = $userId;
+        $favorite->gif_id = $gifId;
+        $favorite->alias = $alias;
+
+        $this->favoriteRepository->save($favorite);
         Log::info('NewFavoriteGifCommand processed ok.', ["NewFavoriteGifHandler", "- DONE -", $command->getData()]);
-//        return $response;
     }
 }

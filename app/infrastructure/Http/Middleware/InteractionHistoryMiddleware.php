@@ -22,7 +22,7 @@ readonly class InteractionHistoryMiddleware
      * @param Closure $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next): mixed
     {
         $response = $next($request);
 

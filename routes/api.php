@@ -22,7 +22,7 @@ Route::get('health', [HealthCheckAction::class, 'execute']);
 Route::middleware('log.interactions')->group(function () {
     Route::get('gifs/search', [GetGifsBySpecificationAction::class, 'execute']);
     Route::get('gifs/{id}', [GetGifByIdAction::class, 'execute']);
-    Route::get('favorites/{id}', [NewFavoriteGifAction::class, 'execute']);
+    Route::post('favorites', [NewFavoriteGifAction::class, 'execute']);
 });
 
 Route::get('logs', [\App\infrastructure\Http\Controllers\LogController::class, 'showLogs']);

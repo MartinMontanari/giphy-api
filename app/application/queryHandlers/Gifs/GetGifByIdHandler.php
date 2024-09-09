@@ -13,7 +13,6 @@ readonly class GetGifByIdHandler
 {
 
     public function __construct(
-//        private GifRepository $gifRepository,
         private GiphyService $gifService
     )
     {

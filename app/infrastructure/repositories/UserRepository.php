@@ -17,7 +17,7 @@ readonly class UserRepository
      */
     public function save(User $user): void
     {
-        Log::info('Saving the user in the database...');
+        Log::info('Saving the user into database...');
         $user->save();
     }
 

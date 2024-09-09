@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id()->autoIncrement();
             $table->unsignedBigInteger('user_id');
             $table->string('gif_id');
-            $table->string('alias');
+            $table->string('alias')->unique();
             $table->timestamps();
 
             // Foreign key constraint

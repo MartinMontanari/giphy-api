@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\domain\services;
+namespace App\Infrastructure\services;
 
 use App\domain\Models\User;
 use App\infrastructure\Exceptions\NotFoundException;
