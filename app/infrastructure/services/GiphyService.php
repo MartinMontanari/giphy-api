@@ -71,7 +71,7 @@ readonly class GiphyService
             ]);
 
             $decodedSearchGiphyResultCollection = new Collection(json_decode($giphySearchResult->getBody()->getContents(), true));
-            Log::info("Gif for -> $id found.",
+            Log::info("Gif by id -> $id found.",
                 ["GiphyService",
                     "getGifById($id)",
                     "- END -"
@@ -83,7 +83,7 @@ readonly class GiphyService
             $errorBody = $errorResponse->getBody()->getContents();
             $errorData = json_decode($errorBody, true);
 
-            Log::error("Error fetching GIF for id -> $id", ["GiphyService", "getGifById($id)", "Error" => $errorData]);
+            Log::error("Error fetching GIF by id -> $id", ["GiphyService", "getGifById($id)", "Error" => $errorData]);
 
             if ($errorData['meta']['status'] === 404) {
                 throw new NotFoundException($errorData['meta']);
@@ -91,4 +91,16 @@ readonly class GiphyService
             throw $exception;
         }
     }
+
+    /**
+     * @param string $id
+     * @return void
+     * @throws GuzzleException
+     * @throws NotFoundException
+     */
+    public function checkIfGifExists(string $id): void
+    {
+        $this->getGifById($id);
+    }
+
 }

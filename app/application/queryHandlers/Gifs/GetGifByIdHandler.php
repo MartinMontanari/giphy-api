@@ -4,7 +4,6 @@ namespace App\application\queryHandlers\Gifs;
 
 use App\application\queries\Gifs\GetIfByIdQuery;
 use App\infrastructure\Exceptions\NotFoundException;
-use App\infrastructure\Exceptions\ServiceException;
 use App\infrastructure\services\GiphyService;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Collection;
@@ -14,7 +13,6 @@ readonly class GetGifByIdHandler
 {
 
     public function __construct(
-//        private GifRepository $gifRepository,
         private GiphyService $gifService
     )
     {

@@ -9,6 +9,7 @@ use App\infrastructure\Exceptions\NotFoundException;
 use App\infrastructure\Http\Controllers\Controller;
 use App\infrastructure\Http\enums\HttpCodes;
 use App\infrastructure\Http\validators\Gifs\GetGifByIdValidator;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -26,7 +27,7 @@ class GetGifByIdAction extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     public function execute(Request $request): JsonResponse
     {

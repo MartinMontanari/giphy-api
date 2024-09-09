@@ -1,25 +1,23 @@
 <?php
-//declare(strict_types=1);
-//
-//namespace App\domain\services;
-//
-//use App\application\commands\Auth\LoginUserCommand;
-//use App\application\commands\Auth\RegisterUserCommand;
-//use App\domain\Models\User;
-//use App\infrastructure\Exceptions\RepositoryException;
-//use App\infrastructure\repositories\UserRepository;
-//use Illuminate\Support\Facades\Hash;
-//use Illuminate\Support\Facades\Log;
-//
-//readonly class UserService
-//{
-//
-//    public function __construct(
-//        private UserRepository $userRepository,
-//    )
-//    {
-//    }
-//
+declare(strict_types=1);
+
+namespace App\infrastructure\services;
+
+use App\domain\Models\User;
+use App\infrastructure\Exceptions\NotFoundException;
+use App\infrastructure\repositories\UserRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Log;
+
+readonly class UserService
+{
+
+    public function __construct(
+        private UserRepository $userRepository,
+    )
+    {
+    }
+
 //    /**
 //     * @param RegisterUserCommand $registerUserCommand
 //     * @throws RepositoryException
@@ -49,18 +47,38 @@
 //            throw new RepositoryException([$exception]);
 //        }
 //    }
-//
+
 //    public function logInUser(LoginUserCommand $loginUserCommand): string
 //    {
 //
 //    }
-//
-//
-//    private function getUserByEmail(string $email): User|null
-//    {
-//        $user = $this->userRepository->findOneByEmail($email);
-//        if(!$user) {
-//            throw new NotFoundException("User not found or does not exist");
-//        }
-//    }
-//}
+
+    /**
+     * @param int $id
+     * @return void
+     * @throws NotFoundException
+     */
+    public function checkIfUserExists(int $id): void
+    {
+        $this->findOneById($id);
+    }
+
+    /**
+     * @param int $id
+     * @return void
+     * @throws NotFoundException
+     */
+    private function findOneById(int $id): void
+    {
+        try {
+            Log::info("Find a user in the database starting... id -> $id", ["UserService", "findOneById($id)", "- START -",]);
+            $user = $this->userRepository->findOneById($id);
+
+            Log::info("user found... user -> $user->first_name $user->last_name | $user->email", ["UserService", "findOneById($id)", "- END -",]);
+            return;
+        } catch (ModelNotFoundException $exception) {
+            Log::error("User not found on database, id -> $id", ["UserRepository", "findOneById($id)", "Error" => $exception->getMessage()]);
+            throw new NotFoundException([$exception->getMessage()]);
+        }
+    }
+}

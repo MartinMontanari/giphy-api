@@ -13,7 +13,7 @@ readonly class InteractionHistoryRepository
      */
     public function save(InteractionHistory $interactionHistory): void
     {
-        Log::info('Saving the interaction in the database and registering history...');
+        Log::info('Saving the interaction into database and registering history...');
         $interactionHistory->save();
     }
 }
