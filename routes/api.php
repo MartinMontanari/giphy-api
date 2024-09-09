@@ -19,15 +19,18 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('health', [HealthCheckAction::class, 'execute']);
 
+
 Route::middleware('log.interactions')->group(function () {
     Route::get('gifs/search', [GetGifsBySpecificationAction::class, 'execute']);
     Route::get('gifs/{id}', [GetGifByIdAction::class, 'execute']);
     Route::post('favorites', [NewFavoriteGifAction::class, 'execute']);
 });
 
+Route::post('login', [AuthController::class, 'login']);
+Route::post('register', [AuthController::class, 'register']);
+Route::middleware('auth:api')->get('user', function (Request $request) {
+    return $request->user();
+});
+
 Route::get('logs', [\App\infrastructure\Http\Controllers\LogController::class, 'showLogs']);
 //Route::post('register', [AuthController::class, 'register']);
-Route::middleware('auth:api')->group(function () {
-//    Route::get('user', 'AuthController@user');
-//    // Other authenticated routes...
-});
