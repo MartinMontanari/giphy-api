@@ -7,7 +7,7 @@ use App\infrastructure\Exceptions\BadRequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class GetGifsBySpecificationValidator
+readonly class GetGifsBySpecificationValidator
 {
     /**
      * @param Request $request
