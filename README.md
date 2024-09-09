@@ -39,6 +39,28 @@ project-root/
 ```
 # cambié el id del gif de numerico a string porque en la respuesta el id obtenido no es numérico
 ![gif-id-is-string-not-number-img.png](gif-id-is-string-not-number-img.png)
+
+# Passport
+
+- para passport es necesario crear las keys publicas y privadas, para ello ejecutar `php artisan passport:install`
+darle yes a todo, corre migraciones y crea los client ID y secret.
+
+- también podemos crear un client ID y secret usando `php artisan passport:client`, seguir los pasos
+
+- después de crear las keys, convertirlas a base64 con el comando `cat storage/oauth-private.key | base64` y ponerlas en el .env en los valores 
+```
+PASSPORT_PRIVATE_KEY="base64:tu_clave_privada_aqui"
+PASSPORT_PUBLIC_KEY="base64:tu_clave_publica_aqui"
+```
+
+- después crear el client password ` artisan passport:client --password`
+- te va a tirar algo así
+```
+giphy-wrapper-api Password Grant Client
+
+Client ID ...................................................................................................................................... 4
+Client secret ........................................................................................... fwjVWy5vE1RUHaKXdT0qa3ksBS1OzgFNOoe4cQFC
+```
 --------------------------------------
 ## How to download and install the project
 

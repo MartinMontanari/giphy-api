@@ -18,40 +18,29 @@ readonly class UserService
     {
     }
 
-//    /**
-//     * @param RegisterUserCommand $registerUserCommand
-//     * @throws RepositoryException
-//     */
-//    public function saveUser(RegisterUserCommand $registerUserCommand)
-//    {
-//        try {
-//            $userData = $registerUserCommand->getData();
-//            $hashedPassword = Hash::make($userData['password']);
-//
-//            $filteredUserData = array_filter($userData, function($value, $key) {
-//                return $key !== 'password';
-//            }, ARRAY_FILTER_USE_BOTH);
-//
-//            Log::info("Mapping the user data to save...", ["UserService", $filteredUserData]);
-//            $user = new User();
-//            $user->user_name = $userData['userName'];
-//            $user->first_name = $userData['firstName'];
-//            $user->last_name = $userData['lastName'];
-//            $user->email = $userData['email'];
-//            $user->password = $hashedPassword;
-//
-//            $this->userRepository->save($user);
-//        }
-//        catch (\Exception $exception) {
-//            Log::error("User save process has failed... Error message ->{$exception->getMessage()}" , ["UserService", $exception]);
-//            throw new RepositoryException([$exception]);
-//        }
-//    }
+    /**
+     * @param array $userData
+     * @param string $hashedPassword
+     * @return int
+     */
+    public function saveUser(array $userData, string $hashedPassword): int
+    {
+        Log::info("Mapping the user data to save...", ["UserService", $userData]);
 
-//    public function logInUser(LoginUserCommand $loginUserCommand): string
-//    {
-//
-//    }
+        $user = new User();
+        $user->user_name = $userData['userName'];
+        $user->first_name = $userData['firstName'];
+        $user->last_name = $userData['lastName'];
+        $user->email = $userData['email'];
+        $user->password = $hashedPassword;
+
+        $this->userRepository->save($user);
+        $userId = $user->id;
+        Log::info("User saved... user_id -> {$userId}", ["UserService", "saveUser()", "- END -"]);
+
+        return $userId;
+    }
+
 
     /**
      * @param int $id

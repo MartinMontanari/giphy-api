@@ -9,6 +9,7 @@ use App\infrastructure\Exceptions\NotFoundException;
 use App\infrastructure\Http\Controllers\Controller;
 use App\infrastructure\Http\enums\HttpCodes;
 use App\infrastructure\Http\validators\favorites\NewFavoriteGifValidator;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -25,6 +26,7 @@ class NewFavoriteGifAction extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
+     * @throws GuzzleException
      */
     public function execute(Request $request): JsonResponse
     {
@@ -39,16 +41,15 @@ class NewFavoriteGifAction extends Controller
         } catch (BadRequestException $exception) {
             Log::error('New favorite gif has failed ->', ["NewFavoriteGifAction", $exception->getMessages()]);
 
-            return response()->json($exception->getMessages())->setStatusCode($exception->getCode());
+            return response()->json(["error" => $exception->getMessages()])->setStatusCode($exception->getCode());
         } catch (NotFoundException $exception) {
             Log::error('New favorite gif has failed ->', ["NewFavoriteGifAction", $exception->getMessages()]);
 
-            return response()->json($exception->getMessages())->setStatusCode($exception->getCode());
+            return response()->json(["error" => $exception->getMessages()])->setStatusCode($exception->getCode());
+        } catch (\Exception $exception) {
+            Log::error('New favorite gif has failed ->', ["NewFavoriteGifAction", $exception->getMessage()]);
+
+            return response()->json(["error" => $exception->getMessage()])->setStatusCode(HttpCodes::INTERNAL_ERROR);
         }
-//        } catch (\Exception $exception) {
-//            Log::error('Search gifs by specification has failed.', ["GetGifsBySpecificationAction", $exception->getMessage()]);
-//
-//            return response()->json($exception->getMessage())->setStatusCode($exception->getCode());
-//        }
     }
 }
