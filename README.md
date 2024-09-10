@@ -98,7 +98,7 @@ chmod 600 storage/oauth-private.key
 chmod 644 storage/oauth-public.key
 ```
 
-7 - Now you could test the health check opening a web browser and go to the URL `http://localhost/api/health`, or just use the Postman collection provided (see the `Testing` section below).
+10 - Now you could test the health check opening a web browser and go to the URL `http://localhost/api/health`, or just use the Postman collection provided (see the `Testing` section below).
 The result will look like this ⬇
 ```
 {

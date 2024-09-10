@@ -5,7 +5,6 @@ namespace App\infrastructure\Http\Controllers\Gifs;
 use App\application\queries\Gifs\GetGifsBySpecificationQuery;
 use App\application\queryHandlers\Gifs\GetGifsBySpecificationHandler;
 use App\infrastructure\Exceptions\BadRequestException;
-use App\infrastructure\Exceptions\ServiceException;
 use App\infrastructure\Http\Controllers\Controller;
 use App\infrastructure\Http\enums\HttpCodes;
 use App\infrastructure\Http\validators\Gifs\GetGifsBySpecificationValidator;
@@ -14,7 +13,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use Mockery\Exception;
 
 class GetGifsBySpecificationAction extends Controller
 {
