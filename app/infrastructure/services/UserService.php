@@ -5,8 +5,11 @@ namespace App\infrastructure\services;
 
 use App\domain\Models\User;
 use App\infrastructure\Exceptions\NotFoundException;
+use App\infrastructure\Exceptions\UnauthorizedException;
 use App\infrastructure\repositories\UserRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
 readonly class UserService
@@ -43,13 +46,23 @@ readonly class UserService
 
 
     /**
-     * @param int $id
-     * @return void
+     * @param string $email
+     * @return User
      * @throws NotFoundException
      */
-    public function checkIfUserExists(int $id): void
+    public function getUserByEmail(string $email): User
     {
-        $this->findOneById($id);
+        try {
+            Log::info("Find a user in the database starting... email -> $email", ["UserService", "getUserByEmail($email)", "- START -"]);
+            $user = $this->userRepository->findOneByEmail($email);
+
+            Log::info("user found... user -> $user->first_name $user->last_name | $user->email", ["UserService", "getUserByEmail($email)", "- END -"]);
+            return $user;
+        } catch (ModelNotFoundException $exception) {
+            Log::error("User not found on database, email -> $email", ["UserRepository", "getUserByEmail($email)", "Error" => $exception->getMessage()]);
+            throw new NotFoundException([$exception->getMessage()]);
+        }
+
     }
 
     /**
@@ -57,16 +70,44 @@ readonly class UserService
      * @return void
      * @throws NotFoundException
      */
-    private function findOneById(int $id): void
+    public function checkIfUserExists(int $id): void
+    {
+        $this->findOneUserByIdOrFail($id);
+    }
+
+    /**
+     * @param string $email
+     * @param string $plainUserPassword
+     * @return User
+     * @throws UnauthorizedException
+     */
+    public function loginAttempt(string $email,string $plainUserPassword): User
+    {
+        Log::info('Checking user credentials...', ["UserService"]);
+        $attempt = Auth::attempt(["email" => $email, "password" => $plainUserPassword]);
+        if (!$attempt) {
+            throw new UnauthorizedException(['Invalid email or password']);
+        }
+        Log::info('Credentials ok.', ["UserService"]);
+        $user = Auth::user();
+
+        Log::info('User authenticated.', ["UserService", "- END -"]);
+        return $user;
+    }
+
+    /**
+     * @param int $id
+     * @return void
+     * @throws NotFoundException
+     */
+    private function findOneUserByIdOrFail(int $id): void
     {
         try {
-            Log::info("Find a user in the database starting... id -> $id", ["UserService", "findOneById($id)", "- START -",]);
+            Log::info("Find a user in the database starting... id -> $id", ["UserService", "- START -"]);
             $user = $this->userRepository->findOneById($id);
-
-            Log::info("user found... user -> $user->first_name $user->last_name | $user->email", ["UserService", "findOneById($id)", "- END -",]);
-            return;
+            Log::info("user found... user -> $user->first_name $user->last_name | $user->email", ["UserService", "- END -"]);
         } catch (ModelNotFoundException $exception) {
-            Log::error("User not found on database, id -> $id", ["UserRepository", "findOneById($id)", "Error" => $exception->getMessage()]);
+            Log::error("User not found on database, id -> $id", ["UserRepository", "Error" => $exception->getMessage()]);
             throw new NotFoundException([$exception->getMessage()]);
         }
     }

@@ -2,7 +2,7 @@
 
 namespace App\application\commands\Auth;
 
-readonly class LoginUserCommand
+readonly class LoginOauthClientCommand
 {
     private string $email;
     private string $password;

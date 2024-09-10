@@ -2,28 +2,28 @@
 
 namespace App\infrastructure\Http\validators\Auth;
 
-use App\application\commands\Auth\RegisterUserCommand;
+use App\application\commands\Auth\RegisterOauthClientCommand;
 use App\infrastructure\Exceptions\BadRequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class RegisterUserValidator
+readonly class RegisterOauthClientValidator
 {
 
 
     /**
      * @param Request $request
-     * @return RegisterUserCommand
+     * @return RegisterOauthClientCommand
      * @throws BadRequestException
      */
-    public function validate(Request $request): RegisterUserCommand
+    public function validate(Request $request): RegisterOauthClientCommand
     {
         $validate = Validator::make($request->all(), $this->getRules(), $this->getMessages());
 
         if($validate->fails()){
             throw new BadRequestException($validate->errors()->getMessages());
         }
-        return new RegisterUserCommand(
+        return new RegisterOauthClientCommand(
             $request->input('userName'),
             $request->input('firstName'),
             $request->input('lastName'),
