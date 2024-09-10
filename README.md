@@ -40,12 +40,6 @@ project-root/
 # cambié el id del gif de numerico a string porque en la respuesta el id obtenido no es numérico
 ![gif-id-is-string-not-number-img.png](gif-id-is-string-not-number-img.png)
 
-# Passport
-
-- para passport es necesario crear las keys publicas y privadas, para ello ejecutar `./vendor/bin/sail artisan passport:install`
-darle yes a todo, corre migraciones y crea los client ID y secret.
-
-- también podemos crear un client ID y secret usando `php artisan passport:client`, seguir los pasos
 
 --------------------------------------
 ## How to download and install the project
@@ -98,7 +92,13 @@ chmod 600 storage/oauth-private.key
 chmod 644 storage/oauth-public.key
 ```
 
-10 - Now you could test the health check opening a web browser and go to the URL `http://localhost/api/health`, or just use the Postman collection provided (see the `Testing` section below).
+10 - You should need parse your `storage/oauth-public.key` to base64 to be able to decode the tokens. So, run ⬇
+```
+base64 storage/oauth-public.key
+```
+- Copy the generated base64 string and paste into your `.env` file replacing the value `PASSPORT_PUBLIC_KEY` (line:87).
+
+11 - Now you could test the health check opening a web browser and go to the URL `http://localhost/api/health`, or just use the Postman collection provided (see the `Testing` section below).
 The result will look like this ⬇
 ```
 {
@@ -106,5 +106,18 @@ The result will look like this ⬇
     "message": "API is up and running!"
 }
 ```
+----------------------------------------------------------
+## Testing
+
+### Environment setup
+- You should need to create a `.env.testing` file at the root folder and just copy/paste the `.env.example` data, run ➜ `cp .env.example .env.testing`.
+- Only need set the `PASSPORT_PUBLIC_KEY` value, just copy/paste the base64 from your `.env` and that will be works.
+
+### How to run the feature tests
+- run ➜ `/vendor/bin/sail artisan test`.
+
+### How to test the API with PostMan
+- In the folder `postman/` you have available a postman.json collection that you could import into your postman application and testing the endpoints.
+
 
 The API is licenced by [MIT license](https://opensource.org/licenses/MIT).
