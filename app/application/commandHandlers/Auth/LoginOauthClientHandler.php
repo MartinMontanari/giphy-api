@@ -35,8 +35,8 @@ readonly class LoginOauthClientHandler
         $plainUserPassword = $command->getData()['password'];
         $user = $this->userService->loginAttempt($userEmail, $plainUserPassword);
         Log::info('LoginOauthClientCommand processed.', ["LoginOauthClientHandler", "- PROCESSING -", $command->getData()['email']]);
+        $token = $this->oauthService->generatePasswordGrantOauthToken($user);
         return $user;
-//        $token = $this->oauthService->generatePasswordGrantOauthToken($user);
 
 //        dd($token);
 //        return $token;

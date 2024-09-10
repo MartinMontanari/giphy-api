@@ -39,26 +39,34 @@ readonly class OauthService
      */
     public function generatePasswordGrantOauthToken(User $user): string
     {
-        $requestTokenClient = new \GuzzleHttp\Client();
-        $oauthClient = Client::where('user_id', $user['id'])->first();
+        try{
+            $requestTokenClient = new \GuzzleHttp\Client();
+            $oauthClient = Client::where('user_id', $user['id'])->first();
+//
+            if (!$oauthClient) {
+                throw new  NotFoundException(["No client found for user with id: ". $user['id']]);
+            }
 
-        if (!$oauthClient) {
-            throw new  NotFoundException(["No client found for user with id: ". $user['id']]);
+            $accessToken = $user->createToken('password_grant_access_token')->accessToken;
+
+            dd($accessToken);
+        } catch(\Exception $e){
+            dd($e);
         }
-
-        $url = config('app.url') . '/api/oauth/token';
-
-        $response = $requestTokenClient->post($url, [
-            'form_params' => [
-                'grant_type' => 'password',
-                'client_id' => $oauthClient['id'],
-                'client_secret' => $oauthClient['secret'],
-                'username' => $user['email'],
-                'password' => $user['password'],
-                'scope' => '',
-            ]
-        ]);
-        dd($response);
+//
+//        $url = config('app.url') . '/api/oauth/token';
+//
+//        $response = $requestTokenClient->post($url, [
+//            'form_params' => [
+//                'grant_type' => 'password',
+//                'client_id' => $oauthClient['id'],
+//                'client_secret' => $oauthClient['secret'],
+//                'username' => $user['email'],
+//                'password' => $user['password'],
+//                'scope' => '',
+//            ]
+//        ]);
+//        dd($response);
         return json_decode((string)$response->getBody(), true);
     }
 }

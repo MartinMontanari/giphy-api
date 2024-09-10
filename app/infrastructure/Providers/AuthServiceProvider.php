@@ -31,6 +31,5 @@ class AuthServiceProvider extends ServiceProvider
         ]);
 
         Passport::loadKeysFrom(storage_path());
-
     }
 }

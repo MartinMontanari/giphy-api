@@ -42,25 +42,11 @@ project-root/
 
 # Passport
 
-- para passport es necesario crear las keys publicas y privadas, para ello ejecutar `php artisan passport:install`
+- para passport es necesario crear las keys publicas y privadas, para ello ejecutar `./vendor/bin/sail artisan passport:install`
 darle yes a todo, corre migraciones y crea los client ID y secret.
 
 - también podemos crear un client ID y secret usando `php artisan passport:client`, seguir los pasos
 
-- después de crear las keys, convertirlas a base64 con el comando `cat storage/oauth-private.key | base64` y ponerlas en el .env en los valores 
-```
-PASSPORT_PRIVATE_KEY="base64:tu_clave_privada_aqui"
-PASSPORT_PUBLIC_KEY="base64:tu_clave_publica_aqui"
-```
-
-- después crear el client password ` artisan passport:client --password`
-- te va a tirar algo así
-```
-giphy-wrapper-api Password Grant Client
-
-Client ID ...................................................................................................................................... 4
-Client secret ........................................................................................... fwjVWy5vE1RUHaKXdT0qa3ksBS1OzgFNOoe4cQFC
-```
 --------------------------------------
 ## How to download and install the project
 
@@ -80,31 +66,44 @@ Open a new terminal (linux/macOS) or a GitBash or PowerShell (Windows) and clone
 - `https://github.com/MartinMontanari/giphy-api-wrapper` / if you haven't configured a GitHub account you should download the code as ZIP file clicking the green button <> Code.
 ------------------------
 ### Running the application
-1 - Go to the folder where you're downloaded/cloned the application.
 
-2 - Create a `.env` file at the root folder and just copy/paste the `.env.example` data. 
+- Hint: all the following commands are available for `terminal(Mac,Linux)` and `PowerShell(Windows)`.
 
-3 - Once you're done, open a new terminal/PowerShell and run the command ➜  `./vendor/bin/sail up`.
-- That's should create the docker environment and running the application. But It's not working yet.
+1 - Go to the folder where you're downloaded/cloned the application. Stay in the root folder and open a new `terminal/PowerShell`.
 
-4 - At the root folder you should open a new terminal/PowerShell and run the command ➜  ` ./vendor/bin/sail artisan migrate`
+2 - You should need to create a `.env` file at the root folder and just copy/paste the `.env.example` data, run ➜ `cp .env.example .env`. 
 
-- That's should run Sail's migrations.
+3 - Install the dependencies, run ➜ `composer install`.
 
-5 - Execute the artisan command to generate the base64 apikey ➜  `./vendor/bin/sail artisan key:generate`.
+4 - Run the Docker containers, we recommend use [laravel/sail](https://laravel.com/docs/11.x/sail) for testing/dev environment, run ➜  `./vendor/bin/sail up`.
 
-6 - Execute the artisan command to install passport and generate the secrets ➜  `./vendor/bin/sail artisan passport:install`.
+5 - Run the database migrations, run ➜  ` ./vendor/bin/sail artisan migrate`.
 
+6 - Generate the base64 apikey, run ➜  `./vendor/bin/sail artisan key:generate`.
+
+7 - Install passport and generate the secrets and clients, run ➜  `./vendor/bin/sail artisan passport:install`.
 - If the prompt ask you about the passport pending migrations, you should type `yes` and confirm.
 - As result passport will create a new secret keys.
- 
-7 - Now you could test the health check opening a web browser and going to the URL `http://localhost/` and the API should return
-```
-// 20240905200940
-// http://localhost/
+- IMPORTANT! Make sure that you have created the secret keys into the `/storage` folder. It will have the `.key` extension.
 
+8 - Open a `laravel.test` docker container bash, run ➜ `./vendor/bin/sail exec laravel.test bash`.
+The result will look like this ⬇
+```
+root@6a9362bf04f0:/var/www/html# 
+```
+
+9 - Configure permissions for the Docker container to allow it to handle the secrets, run ⬇ 
+```
+chmod 600 storage/oauth-private.key
+chmod 644 storage/oauth-public.key
+```
+
+7 - Now you could test the health check opening a web browser and go to the URL `http://localhost/api/health`, or just use the Postman collection provided (see the `Testing` section below).
+The result will look like this ⬇
+```
 {
-"Laravel": "11.22.0"
+    "status": "Healthy",
+    "message": "API is up and running!"
 }
 ```
 
