@@ -47,8 +47,7 @@ readonly class OauthService
                 throw new  NotFoundException(["No client found for user with id: ". $user['id']]);
             }
 
-            $accessToken = $user->createToken('password_grant_access_token')->accessToken;
-
+            $accessToken = $user->createToken('password_grant_access_token', ['view-account', 'edit-account'])->accessToken;
             dd($accessToken);
         } catch(\Exception $e){
             dd($e);
