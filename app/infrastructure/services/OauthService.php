@@ -2,6 +2,9 @@
 
 namespace App\infrastructure\services;
 
+use App\domain\Models\User;
+use App\infrastructure\Exceptions\NotFoundException;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Client;
 
@@ -26,5 +29,36 @@ readonly class OauthService
             'revoked' => false,
         ]);
         Log::info("Passport client creation -> $name", ["OauthService", "createPassportClient($name)", "- END -"]);
+    }
+
+    /**
+     * @param User $user
+     * @return string
+     * @throws GuzzleException
+     * @throws NotFoundException
+     */
+    public function generatePasswordGrantOauthToken(User $user): string
+    {
+        $requestTokenClient = new \GuzzleHttp\Client();
+        $oauthClient = Client::where('user_id', $user['id'])->first();
+
+        if (!$oauthClient) {
+            throw new  NotFoundException(["No client found for user with id: ". $user['id']]);
+        }
+
+        $url = config('app.url') . '/api/oauth/token';
+
+        $response = $requestTokenClient->post($url, [
+            'form_params' => [
+                'grant_type' => 'password',
+                'client_id' => $oauthClient['id'],
+                'client_secret' => $oauthClient['secret'],
+                'username' => $user['email'],
+                'password' => $user['password'],
+                'scope' => '',
+            ]
+        ]);
+        dd($response);
+        return json_decode((string)$response->getBody(), true);
     }
 }

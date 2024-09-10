@@ -2,7 +2,7 @@
 
 namespace App\application\commands\Auth;
 
-readonly class RegisterUserCommand
+readonly class RegisterOauthClientCommand
 {
 
     public function __construct(

@@ -2,28 +2,28 @@
 
 namespace App\infrastructure\Http\validators\Auth;
 
-use App\application\commands\Auth\LoginUserCommand;
+use App\application\commands\Auth\LoginOauthClientCommand;
 use App\infrastructure\Exceptions\BadRequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class LoginUserValidator
+readonly class LoginOauthClientValidator
 {
 
 
     /**
      * @param Request $request
-     * @return LoginUserCommand
+     * @return LoginOauthClientCommand
      * @throws BadRequestException
      */
-    public function validate(Request $request): LoginUserCommand
+    public function validate(Request $request): LoginOauthClientCommand
     {
         $validate = Validator::make($request->all(), $this->getRules(), $this->getMessages());
 
         if($validate->fails()){
             throw new BadRequestException($validate->errors()->getMessages());
         }
-        return new LoginUserCommand(
+        return new LoginOauthClientCommand(
             $request->input('email'),
             $request->input('password'),
         );

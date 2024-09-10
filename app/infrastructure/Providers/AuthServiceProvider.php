@@ -29,5 +29,8 @@ class AuthServiceProvider extends ServiceProvider
             'view-account' => 'View your account',
             'edit-account' => 'Edit your account',
         ]);
+
+        Passport::loadKeysFrom(storage_path());
+
     }
 }
