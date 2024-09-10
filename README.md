@@ -111,7 +111,7 @@ The result will look like this ⬇
 
 ### Environment setup
 - You should need to create a `.env.testing` file at the root folder and just copy/paste the `.env.example` data, run ➜ `cp .env.example .env.testing`.
-- Only need set the `PASSPORT_PUBLIC_KEY` value, just copy/paste the base64 from your `.env` and that will be works.
+- Only need set the `PASSPORT_PUBLIC_KEY` value, just copy/paste the base64 from your `.env` and it'll be works.
 
 ### How to run the feature tests
 - run ➜ `/vendor/bin/sail artisan test`.
