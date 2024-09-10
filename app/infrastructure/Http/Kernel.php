@@ -1,6 +1,7 @@
 <?php
 
 namespace App\infrastructure\Http;
+use App\infrastructure\Http\Middleware\CustomOauthAuthenticator;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -52,7 +53,7 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $middlewareAliases = [
-        'auth' => \App\infrastructure\Http\Middleware\Authenticate::class,
+        'auth' => CustomOauthAuthenticator::class,
         'log.interactions' => \App\infrastructure\Http\Middleware\InteractionHistoryMiddleware::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,

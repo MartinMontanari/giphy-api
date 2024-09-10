@@ -24,10 +24,14 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Passport::tokensExpireIn(now()->addMinutes(30));
+        Passport::refreshTokensExpireIn(now()->addMinutes(30));
+        Passport::personalAccessTokensExpireIn(now()->addMinutes(30));
 
         Passport::tokensCan([
             'view-account' => 'View your account',
             'edit-account' => 'Edit your account',
         ]);
+
+        Passport::loadKeysFrom(storage_path());
     }
 }
