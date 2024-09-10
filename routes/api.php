@@ -21,17 +21,16 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('log.interactions')->group(function () {
-//    Route::middleware('auth:api')->group(function () {
+    Route::get('health', [HealthCheckAction::class, 'execute']);
 
-        Route::get('health', [HealthCheckAction::class, 'execute']);
+    Route::post('login', [LoginOauthClientAction::class, 'execute']);
+    Route::post('register', [RegisterOauthClientAction::class, 'execute']);
 
-        Route::post('login', [LoginOauthClientAction::class, 'execute']);
-        Route::post('register', [RegisterOauthClientAction::class, 'execute']);
-
+    Route::middleware('auth:api')->group(function () {
         Route::get('gifs/search', [GetGifsBySpecificationAction::class, 'execute']);
         Route::get('gifs/{id}', [GetGifByIdAction::class, 'execute']);
         Route::post('favorites', [NewFavoriteGifAction::class, 'execute']);
-//    });
+    });
 });
 
 
