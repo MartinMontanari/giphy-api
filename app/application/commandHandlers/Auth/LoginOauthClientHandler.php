@@ -23,22 +23,20 @@ readonly class LoginOauthClientHandler
 
     /**
      * @param LoginOauthClientCommand $command
-//     * @return string
-     * @throws GuzzleException
+     * @return string
      * @throws NotFoundException
      * @throws UnauthorizedException
      */
-    public function handle(LoginOauthClientCommand $command)
+    public function handle(LoginOauthClientCommand $command): string
     {
         Log::info('Processing LoginOauthClientCommand', ["LoginOauthClientHandler", "- START -", $command->getData()['email']]);
         $userEmail = $command->getData()['email'];
         $plainUserPassword = $command->getData()['password'];
         $user = $this->userService->loginAttempt($userEmail, $plainUserPassword);
-        Log::info('LoginOauthClientCommand processed.', ["LoginOauthClientHandler", "- PROCESSING -", $command->getData()['email']]);
+        Log::info('LoginOauthClientCommand in progress, user logged in.', ["LoginOauthClientHandler", "- PROCESSING -", $command->getData()['email']]);
         $token = $this->oauthService->generatePasswordGrantOauthToken($user);
-        return $user;
+        Log::info('LoginOauthClientCommand processed.', ["LoginOauthClientHandler", "- END -", $command->getData()['email']]);
 
-//        dd($token);
-//        return $token;
+        return $token;
     }
 }

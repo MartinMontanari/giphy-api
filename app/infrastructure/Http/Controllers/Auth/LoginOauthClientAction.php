@@ -19,7 +19,7 @@ class LoginOauthClientAction extends Controller
 {
     public function __construct(
         private readonly LoginOauthClientValidator $loginOauthClientValidator,
-        private readonly LoginOauthClientHandler $loginOauthClientHandler,
+        private readonly LoginOauthClientHandler   $loginOauthClientHandler,
     )
     {
     }
@@ -31,31 +31,20 @@ class LoginOauthClientAction extends Controller
      */
     public function execute(Request $request)
     {
-        try{
+        try {
+            Log::info('Login Oauth user case starting... ->', ["LoginOauthClientAction", $request->getMethod(), $request->all()['email']]);
             /** @var LoginOauthClientCommand $command */
             $command = $this->loginOauthClientValidator->validate($request);
-            $this->loginOauthClientHandler->handle($command);
-            dd("tu viejarda");
 
-//            $response = \Http::post(config('passport.oauth.urls.redirect'), [
-//                'grant_type' => 'password',
-//                'client_id' => config('passport.password_grant_client.id'),
-//                'client_secret' => config('passport.password_grant_client.secret'),
-//                'username' => $request->email,
-//                'password' => $request->password,
-//                'scope' => '',
-//            ]);
-//
-//            if ($response->failed()) {
-//                return response()->json(['error' => 'Unauthorized'], 401);
-//            }
+            $personalAccessToken = $this->loginOauthClientHandler->handle($command);
+            Log::info('Login Oauth user done... ->', ["LoginOauthClientAction", $request->getMethod(), $request->all()['email']]);
 
-//            return $response->json();
+            return response()->json(['access_token' => $personalAccessToken])->setStatusCode(HttpCodes::OK);
         } catch (BadRequestException $exception) {
             Log::error('Oauth login failed ->', ["LoginOauthClientAction", $exception->getMessages()]);
 
             return response()->json(["error" => $exception->getMessages()])->setStatusCode($exception->getCode());
-        }catch (UnauthorizedException $exception) {
+        } catch (UnauthorizedException $exception) {
             Log::error('Oauth login failed ->', ["LoginOauthClientAction", $exception->getMessages()]);
 
             return response()->json(["error" => $exception->getMessages()])->setStatusCode($exception->getCode());
@@ -63,7 +52,7 @@ class LoginOauthClientAction extends Controller
             Log::error('Oauth login failed ->', ["LoginOauthClientAction", $exception->getMessages()]);
 
             return response()->json(["error" => $exception->getMessages()])->setStatusCode($exception->getCode());
-        }catch (GuzzleException $exception) {
+        } catch (GuzzleException $exception) {
             Log::error('Oauth login failed ->', ["LoginOauthClientAction", $exception->getMessage()]);
 
             return response()->json(["error" => $exception->getMessage()])->setStatusCode($exception->getCode());
