@@ -4,43 +4,6 @@
 ## About the application
 This is a simple Rest API that consumes Giphy's public API. The API is based on PHP8.2 and Laravel11.22.0, with Eloquent and MySQL and implements Oauth2.0 using Laravel Passport.
 
-### Project structure
-
-```
-project-root/
-├── app/
-│   ├── Console/
-│   ├── Exceptions/
-│   ├── Http/
-│   │   ├── Controllers/
-│   │   ├── Middleware/
-│   │   ├── Requests/
-│   │   └── Kernel.php
-│   ├── Models/
-│   ├── Providers/
-│   ├── Services/
-│   └── Repositories/
-├── bootstrap/
-├── config/
-├── database/
-│   ├── factories/
-│   ├── migrations/
-│   └── seeders/
-├── routes/
-│   ├── api.php
-│   └── channels.php
-├── storage/
-├── tests/
-├── vendor/
-├── .env
-├── artisan
-├── composer.json
-└── phpunit.xml
-```
-# cambié el id del gif de numerico a string porque en la respuesta el id obtenido no es numérico
-![gif-id-is-string-not-number-img.png](gif-id-is-string-not-number-img.png)
-
-
 --------------------------------------
 ## How to download and install the project
 
@@ -118,6 +81,162 @@ The result will look like this ⬇
 
 ### How to test the API with PostMan
 - In the folder `postman/` you have available a postman.json collection that you could import into your postman application and testing the endpoints.
+
+----------------------------------------------------------
+## Specifications
+
+### Stack
+- php8.2 + Laravel10 + Docker + MySQl + Eloquent + laravel/passport.
+----------------------------------------------------------
+
+### Entities Diagram
+
+![DER.png](docs/DER.png)
+
+----------------------------------------------------------
+### Architecture workflow
+![image.png](docs/image.png)
+
+----------------------------------------------------------
+### System Architecture
+The logical layer organization is based on Onion Architecture:
+
+![Arquitectura Software](https://user-images.githubusercontent.com/22304957/63598334-b6d93d00-c595-11e9-958a-8f5ff090993f.png)
+
+Sources for Architecture, Concepts, and Best Practices:
+https://martinfowler.com/eaaCatalog/ (Concepts for ORM DataMapper vs ActiveRecord)
+
+https://domainlanguage.com/ddd/ (DDD Concepts such as: Entities / Value Objects / Services / Commands / Shared-Kernel / Repositories)
+
+The main blue book contains all the relevant concepts used here as best practices to focus on the domain and create the most decoupled and correct systems possible.
+
+A summary of this free book is available at:
+
+http://domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf
+
+Dependency Injection / Inversion of Control
+To maintain low coupling and adhere to the architecture, dependency injection and, in general, an IoC (Inversion of Control) container are necessary, as outlined in the SOLID principles. This helps us use interfaces/contracts, which are injected by a cross-cutting infrastructure component that resolves the necessary dependencies for us.
+
+--------------------------------------------------
+
+### Project structure
+
+```
+project-root/
+.
+├── app
+│   ├── application
+│   │   ├── commandHandlers
+│   │   │   ├── Auth
+│   │   │   │   ├── LoginOauthClientHandler.php
+│   │   │   │   └── RegisterOauthClientHandler.php
+│   │   │   └── favorites
+│   │   │       └── NewFavoriteGifHandler.php
+│   │   ├── commands
+│   │   │   ├── Auth
+│   │   │   │   ├── LoginOauthClientCommand.php
+│   │   │   │   └── RegisterOauthClientCommand.php
+│   │   │   └── favorites
+│   │   │       └── NewFavoriteGifCommand.php
+│   │   ├── queries
+│   │   │   └── Gifs
+│   │   │       ├── GetGifsBySpecificationQuery.php
+│   │   │       └── GetGifByIdQuery.php
+│   │   └── queryHandlers
+│   │       └── Gifs
+│   │           ├── GetGifByIdHandler.php
+│   │           └── GetGifsBySpecificationHandler.php
+│   ├── domain
+│   │   └── Models
+│   │       ├── Favorite.php
+│   │       ├── InteractionHistory.php
+│   │       └── User.php
+│   └── infrastructure
+│       ├── Console
+│       │   └── Kernel.php
+│       ├── Exceptions
+│       │   ├── BadRequestException.php
+│       │   ├── Handler.php
+│       │   ├── NotFoundException.php
+│       │   ├── RepositoryException.php
+│       │   └── UnauthorizedException.php
+│       ├── Http
+│       │   ├── Controllers
+│       │   │   ├── Auth
+│       │   │   │   ├── LoginOauthClientAction.php
+│       │   │   │   └── RegisterOauthClientAction.php
+│       │   │   ├── Controller.php
+│       │   │   ├── favorites
+│       │   │   │   └── NewFavoriteGifAction.php
+│       │   │   ├── Gifs
+│       │   │   │   ├── GetGifByIdAction.php
+│       │   │   │   └── GetGifsBySpecificationAction.php
+│       │   │   ├── Health
+│       │   │   │   └── HealthCheckAction.php
+│       │   │   └── LogController.php
+│       │   ├── enums
+│       │   │   └── HttpCodes.php
+│       │   ├── Kernel.php
+│       │   ├── Middleware
+│       │   │   ├── Authenticate.php
+│       │   │   ├── CustomOauthAuthenticator.php
+│       │   │   ├── EncryptCookies.php
+│       │   │   ├── InteractionHistoryMiddleware.php
+│       │   │   ├── PreventRequestsDuringMaintenance.php
+│       │   │   ├── RedirectIfAuthenticated.php
+│       │   │   ├── TrimStrings.php
+│       │   │   ├── TrustHosts.php
+│       │   │   ├── TrustProxies.php
+│       │   │   ├── ValidateSignature.php
+│       │   │   └── VerifyCsrfToken.php
+│       │   └── validators
+│       │       ├── Auth
+│       │       │   ├── LoginOauthClientValidator.php
+│       │       │   └── RegisterOauthClientValidator.php
+│       │       ├── favorites
+│       │       │   └── NewFavoriteGifValidator.php
+│       │       └── Gifs
+│       │           ├── GetGifByIdValidator.php
+│       │           └── GetGifsBySpecificationValidator.php
+│       ├── Providers
+│       │   ├── AppServiceProvider.php
+│       │   ├── AuthServiceProvider.php
+│       │   ├── BroadcastServiceProvider.php
+│       │   ├── EventServiceProvider.php
+│       │   └── RouteServiceProvider.php
+│       ├── repositories
+│       │   ├── FavoriteRepository.php
+│       │   ├── InteractionHistoryRepository.php
+│       │   └── UserRepository.php
+│       └── services
+│           ├── AccessTokenService.php
+│           ├── GiphyService.php
+│           ├── InteractionHistoryService.php
+│           ├── OauthService.php
+│           └── UserService.php
+├── bootstrap/
+├── config/
+├── database/
+│   ├── factories/
+│   ├── migrations/
+│   └── seeders/
+├── routes/
+│   ├── api.php
+│   └── channels.php
+├── storage/
+├── tests/
+├── vendor/
+├── .env
+├── artisan
+├── composer.json
+└── phpunit.xml
+```
+
+
+
+
+
+
 
 
 The API is licenced by [MIT license](https://opensource.org/licenses/MIT).
